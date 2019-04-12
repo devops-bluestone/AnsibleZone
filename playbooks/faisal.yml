@@ -1,0 +1,21 @@
+---
+ - hosts: localhost
+   tasks:
+     - name: Install OS specific packages
+       yum:
+          name: httpd
+          state: latest
+       when: ansible_os_family == "RedHat"
+
+     - name: Start httpd service  
+       service:
+          name: httpd
+          state: started
+
+     - name: check for the httpd process if it's running
+       shell: ps -eaf |grep httpd
+       register: result
+     
+     - debug:
+         msg: "{{ result.stdout_lines }}"
+   

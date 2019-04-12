@@ -1,0 +1,41 @@
+---
+ - hosts: localhost
+   tasks:
+     - name: Create a directory
+       file:
+           path: /var/www/html/protected
+           state: directory
+           owner: jenkins
+           group: jenkins
+           mode:  0644
+
+     - name: create a http.conf file
+       file:
+         path: /var/www/html/protected/httpd.conf
+         path: /var/www/html/protected/index.html
+         state: touch
+         mode: 0644
+         owner: jenkins
+         group: jenkins
+
+     - name: write the contents into http.conf
+       lineinfile:
+             path: /var/www/html/protected/httpd.conf
+             line: "AllowOverride None"
+             line: "Changes made here will be deleted"
+    
+     - name: Replace function
+       replace:
+           path: /var/www/html/protected/httpd.conf
+           regexp: 'AllowOverride None'
+           replace: 'AllowOverride Authconfig'
+           backup: yes
+
+     - name: write the contents into index.html
+       lineinfile:
+             path: /var/www/html/protected/index.html
+             line: "{{ansible_hostname}} has been customized using Ansible on {{timestamp.stdout}}"
+     - name: restart httpd
+        - service: httpd
+           state: restarted
+           enabled: yes

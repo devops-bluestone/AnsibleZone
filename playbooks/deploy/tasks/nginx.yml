@@ -1,0 +1,36 @@
+---
+ - name: INSTALL NGINX REPO FILE 
+   file: 
+       path: /etc/yum.repos.d/nginx.repo
+       state: touch 
+
+ - name: TEMPLATE NGINX REPO
+   template: 
+         src: templates/nginx.j2
+         dest: /etc/yum.repos.d/nginx.repo
+
+ - name: REMOVE THE HTTPD
+   yum: 
+      name: httpd
+      state: absent
+
+ - name: INSTALL NGINX
+   yum: 
+      name: nginx
+      state: present
+
+ - name: INSTALL EPEL
+   yum: 
+      name: epel-release
+      state: present
+
+ - name: INSTALL ALL
+   yum:
+     name: "{{ item }}"
+     state: present
+   with_items:
+       - mariadb-server
+       - php
+       - php-fpm
+       - php-mysql
+       - MySQL-python

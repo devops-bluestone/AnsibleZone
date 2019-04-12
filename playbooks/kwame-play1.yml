@@ -1,0 +1,9 @@
+---
+ - hosts: localhost
+   tasks:
+       - name: Install minimal soft
+         shell: "{{ item }}"
+         with_items:
+           - touch /tmp/abc.txt
+           - yum list htop
+           

@@ -1,0 +1,22 @@
+---
+- hosts: localhost
+  tasks:
+   - name: remove httpd
+     yum: pkg=httpd state=absent 
+
+   - name: Install httpd & start httpd service
+     yum: pkg=httpd state=present
+
+   - name: Install httpd & start httpd service
+     service: name=httpd state=restarted
+   
+   - name: configure httpd service to run @ boot time
+     shell: chkconfig -add httpd
+     shell: chkconfig httpd on
+   
+   - name: Ensure Apache is running
+     shell: ps -aux |grep httpd
+     register: p
+     
+   - debug:
+        var: p.stdout_lines

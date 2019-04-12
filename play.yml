@@ -1,0 +1,22 @@
+---
+ - hosts: localhost
+   tasks:
+     - name: CHECK IF BINARY IS PRESENT 
+       shell: command -v kubectl 
+       register: output 
+       ignore_errors: yes
+
+     - debug:
+          var: output
+
+     - name: INSTALLL KUBECTL   
+       shell: "{{ item }}"
+       with_items: 
+         - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+         - chmod +x kubectl 
+         - mv kubectl /usr/local/sbin
+       when: output.failed == true
+
+     - debug:
+          msg: "kubectl package is already installed"
+       when: output.failed == false
