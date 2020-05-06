@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  tasks:
+    - name: create a http.conf file
+      file:
+        path: /var/www/html/protected/file1
+        path: /var/www/html/protected/file2
+        state: touch
+        mode: 0644
+        owner: ansible
+        group: ansible

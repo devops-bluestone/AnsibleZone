@@ -1,23 +1,27 @@
 ---
  - hosts: localhost
+   become: yes
+   ignore_errors: true
    tasks:
      - name: Create a directory
        file:
            path: /var/www/html/protected
            state: directory
-           owner: jenkins
-           group: jenkins
-           mode:  0644
+           owner: ansible
+           group: ansible
+           mode:  0755
 
      - name: create a http.conf file
        file:
-         path: /var/www/html/protected/httpd.conf
-         path: /var/www/html/protected/index.html
+         path: "{{ item }}"
          state: touch
-         mode: 0644
-         owner: jenkins
-         group: jenkins
-
+         mode: 0755
+         owner: ansible
+         group: ansible
+       with_items:
+        - /var/www/html/protected/index.html
+        - /var/www/html/protected/httpd.conf
+     
      - name: write the contents into http.conf
        lineinfile:
              path: /var/www/html/protected/httpd.conf
@@ -34,8 +38,9 @@
      - name: write the contents into index.html
        lineinfile:
              path: /var/www/html/protected/index.html
-             line: "{{ansible_hostname}} has been customized using Ansible on {{timestamp.stdout}}"
+             line: "{{ansible_hostname}} has been customized using Ansible on {{ansible_date_time.date}}"
      - name: restart httpd
-        - service: httpd
-           state: restarted
-           enabled: yes
+       service: 
+         name: httpd
+         state: restarted
+         enabled: yes

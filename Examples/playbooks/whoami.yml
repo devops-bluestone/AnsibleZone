@@ -1,9 +1,12 @@
 ---
-- hosts: all
-  become: yes
+- hosts: localhost
+#  become: yes
   tasks:
   - name: find who is executing
     command: whoami
+    register: output
+  - debug:
+      var: output.stdout
   - name: ping all
     ping:
   - name: find out current directory
