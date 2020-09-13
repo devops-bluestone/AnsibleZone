@@ -1,0 +1,30 @@
+--- 
+ - name: service start
+   service: 
+       name: mysql
+       state: started
+       enabled: true
+
+# - name: MySQL | Set the root password.
+#   mysql_user: 
+#     name: "{{ user }}"
+#     password: "{{ password }}"
+#     host: localhost
+
+ - name: create database
+   mysql_db:
+      name: "{{ db_name }}"
+      state: present
+      login_user: "{{ user }}"
+      login_password: "{{ password }}"
+
+ - name: privlege grant
+   mysql_user:
+      name: "{{ user }}"
+      priv: "{{ db_name }}.*:ALL"
+      login_user:  "{{ user }}"
+      login_password: "{{ password }}"
+      state: present
+
+
+

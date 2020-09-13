@@ -1,0 +1,20 @@
+---
+ - hosts: localhost
+   tasks:
+     - name: Check the status of a file
+       stat:
+          path: /root/foo.conf
+       register: foo
+
+     - name: create the file if absent
+       file: 
+            path: /root/foo.conf
+            state: touch
+            owner: root
+            group: root
+            mode: 0644
+       when: foo.stat.exists == false
+     
+     - debug:
+          msg: "foo.conf is already present"
+       when: foo.stat.exists == true

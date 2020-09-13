@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  vars:
+    - my_var: " Kwame Dada "
+  tasks:
+    - name: Display some messages
+      command: echo -e "{{my_var }} is a very smart man, \n  {{ my_var}} lives in Waterdown\n {{my_var}} is learning to write Ansible\n"
+      register: results
+
+    - name: show results 
+      debug: msg=" {{ results.stdout_lines }}"
+      

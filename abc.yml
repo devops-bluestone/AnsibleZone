@@ -1,0 +1,20 @@
+---
+ - hosts: localhost
+   tasks:
+     - name: STATUS OF KWAME FILE
+       stat:
+            path: /opt/kwame
+       register: stat_kwame
+
+     - name: CREATE A FILE 
+       file:
+            path: /opt/kwame
+            state: touch 
+            owner: root
+            group: root
+            mode: 0755
+       when: stat_kwame.stat.exists == false 
+
+     - debug:
+          msg: "File exists"
+       when: stat_kwame.stat.exists == true  

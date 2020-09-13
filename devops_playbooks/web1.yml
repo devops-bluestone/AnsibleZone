@@ -1,0 +1,31 @@
+---
+ - hosts: localhost
+   tasks:
+      - name: INSTALL HTTPD AND START THE SERVICE	
+        yum:
+             name: httpd
+             state: present
+            
+      - service:
+            name: httpd
+            state: started
+            enabled: true 
+       
+      - name: creating a file and hello
+        lineinfile:
+           path: /var/www/index.html
+           create: yes 
+           line: "Hello from  {{ ansible_hostname }}"
+
+      - name: Change the permissions of the file
+        file:
+            path: /var/www/index.html
+            mode: 0644 
+            owner: jenkins
+            group: jenkins
+ 
+      - name: firewalld
+        firewalld:
+           service: http
+           permanent: yes
+           state: enabled 
